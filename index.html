@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Eclaboucles — Bijoux artisanaux</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <a href="#about">La marque</a>
+    <a href="blue-marble.html">Blue Marble</a>
+    <a href="tournesols.html">Tournesols</a>
+    <a href="contact.html">Contact</a>
+
+    <!-- Onglet panier à droite -->
+    <div id="nav-cart" style="float:right; margin-left: auto;">
+      <a href="#" id="open-cart">Panier (<span id="nav-cart-count">0</span>)</a>
+    </div>
+
+    <!-- Fenêtre panier flottante -->
+  <div id="cart-modal" style="display:none; position:fixed; top:60px; right:20px; width:350px; max-height:80vh; overflow-y:auto; background:#fff; border:1px solid #ccc; padding:15px; box-shadow:0 2px 10px rgba(0,0,0,0.3); z-index:1000;">
+  <h3>Mon Panier</h3>
+  <div id="cart-items">
+    <p>Votre panier est vide.</p>
+  </div>
+  <p><strong>Total : </strong><span id="cart-total">0</span> €</p>
+  <button id="clear-cart">Vider le panier</button>
+  <button id="close-cart">Fermer</button>
+  </div>
+
+</nav>
+
+<header class="hero">
+
+  <div class="slides">
+    <div class="slide active" style="background-image:url('images/fond-neutre.jpg')"></div>
+    <div class="slide" style="background-image:url('images/fondecran1.jpg')"></div>
+    <div class="slide" style="background-image:url('images/fondecran2.jpg')"></div>
+  </div>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+
+    <img src="images/logo-eclaboucles.png" class="hero-logo">
+
+    <h1>Eclaboucles</h1>
+    <p>Bijoux artisanaux en pâte polymère</p>
+
+  </div>
+
+  <!-- flèches -->
+  <div class="arrow left" onclick="prevSlide()">❮</div>
+  <div class="arrow right" onclick="nextSlide()">❯</div>
+
+  <!-- points -->
+  <div class="dots">
+    <span onclick="goToSlide(0)" class="dot active"></span>
+    <span onclick="goToSlide(1)" class="dot"></span>
+    <span onclick="goToSlide(2)" class="dot"></span>
+  </div>
+
+</header>
+
+<section id="about">
+<h2>La marque</h2>
+<p>Des créations uniques façonnées à la main.</p>
+</section>
+
+<section id="collections">
+<h2>Collections</h2>
+<div class="collection-buttons">
+<a href="blue-marble.html"><button>Blue Marble</button></a>
+<a href="tournesols.html"><button>Tournesols</button></a>
+</div>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>Pour toute question ou commande, <a href="contact.html" class="button">Contactez-nous</a></p>
+</section>
+
+<footer>© 2026 Eclaboucles</footer>
+
+<script>
+let index = 0;
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+
+function showSlide(i){
+  slides.forEach(s => s.classList.remove("active"));
+  dots.forEach(d => d.classList.remove("active"));
+  slides[i].classList.add("active");
+  dots[i].classList.add("active");
+  index = i;
+}
+
+function nextSlide(){
+  index = (index + 1) % slides.length;
+  showSlide(index);
+}
+
+function prevSlide(){
+  index = (index - 1 + slides.length) % slides.length;
+  showSlide(index);
+}
+
+function goToSlide(i){
+  showSlide(i);
+}
+
+setInterval(nextSlide, 2000);
+</script>
+
+
+<script>
+// --- Panier global avec LocalStorage ---
+const navCartCount = document.getElementById("nav-cart-count");
+const cartItemsDiv = document.getElementById("cart-items");
+const cartTotalEl = document.getElementById("cart-total");
+const openCartBtn = document.getElementById("open-cart");
+const closeCartBtn = document.getElementById("close-cart");
+const clearCartBtn = document.getElementById("clear-cart");
+const cartModal = document.getElementById("cart-modal");
+
+// Récupérer le panier depuis LocalStorage ou créer un tableau vide
+function getCart(){
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+// Sauvegarder le panier dans LocalStorage
+function saveCart(cart){
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Affichage du panier
+function renderCart(){
+  const cart = getCart();
+  cartItemsDiv.innerHTML = "";
+  if(cart.length === 0){
+    cartItemsDiv.innerHTML = "<p>Votre panier est vide.</p>";
+    cartTotalEl.textContent = "0";
+    navCartCount.textContent = "0";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${item.name}</strong><br>
+      ${item.description}<br>
+      Prix: ${item.price.toFixed(2)} €<br>
+      Quantité: <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="item-qty" style="width:50px;">
+      <button data-index="${index}" class="remove-item">Supprimer</button>
+    `;
+    ul.appendChild(li);
+    total += item.price * item.quantity;
+  });
+
+  cartItemsDiv.appendChild(ul);
+  cartTotalEl.textContent = total.toFixed(2);
+  navCartCount.textContent = cart.reduce((sum,i)=>sum+i.quantity,0);
+
+  // Changement quantité
+  document.querySelectorAll(".item-qty").forEach(input=>{
+    input.addEventListener("change", e=>{
+      const idx = e.target.dataset.index;
+      const val = parseInt(e.target.value);
+      const cart = getCart();
+      if(val < 1){ e.target.value = 1; return; }
+      cart[idx].quantity = val;
+      saveCart(cart);
+      renderCart();
+    });
+  });
+
+  // Supprimer un article
+  document.querySelectorAll(".remove-item").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      const idx = e.target.dataset.index;
+      const cart = getCart();
+      cart.splice(idx,1);
+      saveCart(cart);
+      renderCart();
+    });
+  });
+}
+
+// Ajouter au panier
+document.querySelectorAll(".add-to-cart").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const cart = getCart(); // toujours lire le panier à jour
+    const product = {
+      id: btn.dataset.id,
+      name: btn.dataset.name,
+      description: btn.dataset.description,
+      price: parseFloat(btn.dataset.price),
+      quantity:1
+    };
+
+    const existing = cart.find(p=>p.id === product.id);
+    if(existing){
+      existing.quantity += 1;
+    } else {
+      cart.push(product);
+    }
+
+    saveCart(cart);
+    renderCart();
+    alert(`${product.name} ajouté au panier !`);
+  });
+});
+
+// Ouvrir / fermer
+openCartBtn.addEventListener("click", ()=> cartModal.style.display="block");
+closeCartBtn.addEventListener("click", ()=> cartModal.style.display="none");
+
+// Vider panier
+clearCartBtn.addEventListener("click", ()=>{
+  saveCart([]);
+  renderCart();
+});
+
+// Afficher panier dès chargement
+renderCart();
+</script>
+
+
+</body>
+</html>
