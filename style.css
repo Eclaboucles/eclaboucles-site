@@ -589,3 +589,30 @@ summary{
     max-width: 100%;
   }
 }
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  padding: 40px;
+}
+
+.collection-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.collection-card img {
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s;
+}
+
+.collection-card:hover img {
+  transform: scale(1.05);
+}
+
+.collection-card h3 {
+  text-align: center;
+  margin-top: 12px;
+}
