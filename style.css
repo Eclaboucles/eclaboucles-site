@@ -442,31 +442,32 @@ summary{
 
 @media (max-width: 900px) {
   .product-page {
-    flex-direction: column;  /* image au-dessus, texte en dessous */
+    display: flex;
+    flex-direction: column !important; /* empile image puis texte */
     gap: 20px;
-    margin: 80px 15px;
-    padding: 0 10px;         /* padding interne */
+    margin: 100px 15px;
   }
 
   .product-image {
-    position: relative;      /* plus sticky */
-    width: 100%;             /* image pleine largeur */
-    max-width: 100%;         /* éviter qu’elle dépasse */
+    position: relative !important;  /* désactive sticky */
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
   }
 
   .product-info {
     width: 100%;
-    font-size: 18px;         /* texte plus lisible */
+    font-size: 18px;
     line-height: 1.6;
   }
 
   .product-info h1 {
-    font-size: 26px;         /* titre plus petit mais lisible */
+    font-size: 26px;
     margin-bottom: 12px;
   }
 
   .price {
-    font-size: 20px;         /* prix plus lisible */
+    font-size: 20px;
     margin-bottom: 15px;
   }
 
@@ -475,14 +476,15 @@ summary{
     text-align: center;
   }
 
-  /* Slider images : adapter largeur */
+  /* Slider */
   .product-slider {
     max-width: 100%;
   }
 
   .pslider-arrows {
-    top: 45%; /* centrer flèches */
+    top: 45%;
   }
 }
+
 
 
