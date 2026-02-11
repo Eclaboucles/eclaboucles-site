@@ -419,6 +419,26 @@ summary{
   margin: 0;
 }
 
+
+.product-page {
+  display: flex;
+  gap: 40px; /* espace entre image et texte */
+  margin: 120px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.product-image {
+  flex: 0 0 400px;   /* largeur fixe pour desktop */
+  position: sticky;
+  top: 20px;
+}
+
+.product-info {
+  flex: 1;            /* prend le reste de l'espace */
+}
+
+
 @media (max-width: 900px) {
   .product-page {
     flex-direction: column;  /* image au-dessus, texte en dessous */
