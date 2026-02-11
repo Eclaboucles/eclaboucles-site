@@ -422,39 +422,67 @@ summary{
 
 .product-page {
   display: flex;
-  gap: 40px; /* espace entre image et texte */
-  margin: 120px auto;
+  gap: 40px;
   max-width: 1200px;
+  margin: 120px auto;
   padding: 0 20px;
 }
 
 .product-image {
-  flex: 0 0 400px;   /* largeur fixe pour desktop */
+  flex: 0 0 400px;  /* largeur fixe pour desktop */
   position: sticky;
   top: 20px;
 }
 
 .product-info {
-  flex: 1;            /* prend le reste de l'espace */
+  flex: 1;           /* texte prend le reste de l'espace */
 }
+
 
 
 @media (max-width: 900px) {
   .product-page {
     flex-direction: column;  /* image au-dessus, texte en dessous */
     gap: 20px;
-    margin: 100px 15px;
+    margin: 80px 15px;
+    padding: 0 10px;         /* padding interne */
   }
 
   .product-image {
-    position: relative; /* plus sticky */
-    flex: 1 1 100%;
-    width: 100%;
+    position: relative;      /* plus sticky */
+    width: 100%;             /* image pleine largeur */
+    max-width: 100%;         /* éviter qu’elle dépasse */
   }
 
   .product-info {
-    flex: 1 1 100%;
-    font-size: 18px;    /* texte plus lisible */
+    width: 100%;
+    font-size: 18px;         /* texte plus lisible */
+    line-height: 1.6;
+  }
+
+  .product-info h1 {
+    font-size: 26px;         /* titre plus petit mais lisible */
+    margin-bottom: 12px;
+  }
+
+  .price {
+    font-size: 20px;         /* prix plus lisible */
+    margin-bottom: 15px;
+  }
+
+  .add-to-cart {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Slider images : adapter largeur */
+  .product-slider {
+    max-width: 100%;
+  }
+
+  .pslider-arrows {
+    top: 45%; /* centrer flèches */
   }
 }
+
 
