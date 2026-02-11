@@ -47,30 +47,26 @@
 <section class="product-page">
 
   <div class="product-image">
-
-    <div class="product-image">
+    <div class="product-slider-wrapper">
       <div class="product-slider">
-      <img class="pslide active" src="images/bluemarble1_1.jpg">
-      <img class="pslide" src="images/bluemarble1_2.jpg">
-      <img class="pslide" src="images/bluemarble1_3.jpg">
+        <img class="pslide active" src="images/bluemarble1_1.jpg">
+        <img class="pslide" src="images/bluemarble1_2.jpg">
+        <img class="pslide" src="images/bluemarble1_3.jpg">
+        <!-- flèches -->
+        <div class="pslider-arrows">
+          <span class="pslide-arrow left" onclick="prevPSlide()">&#10094;</span>
+          <span class="pslide-arrow right" onclick="nextPSlide()">&#10095;</span>
+        </div>
+
+        <!-- petits points -->
+        <div class="pdots">
+          <span class="pdot active" onclick="goToPSlide(0)"></span>
+          <span class="pdot" onclick="goToPSlide(1)"></span>
+          <span class="pdot" onclick="goToPSlide(2)"></span>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- flèches -->
-  <div class="pslider-arrows">
-    <span class="pslide-arrow left" onclick="prevPSlide()">&#10094;</span>
-    <span class="pslide-arrow right" onclick="nextPSlide()">&#10095;</span>
-  </div>
-
-  <!-- petits points -->
-  <div class="pdots">
-    <span class="pdot active" onclick="goToPSlide(0)"></span>
-    <span class="pdot" onclick="goToPSlide(1)"></span>
-    <span class="pdot" onclick="goToPSlide(2)"></span>
-  </div>
-
-  </div>
-  </div>
-
   <div class="product-info">
     <h1>Pampilles (Taille 3)</h1>
     <p class="price">32,00 €</p>
@@ -263,6 +259,43 @@ clearCartBtn.addEventListener("click", ()=>{
 // Afficher panier dès chargement
 renderCart();
 </script>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll(".pslide");
+const dots = document.querySelectorAll(".pdot");
+
+function showSlide(index){
+  slides.forEach((s,i)=>{
+    s.classList.toggle("active", i===index);
+  });
+  dots.forEach((d,i)=>{
+    d.classList.toggle("active", i===index);
+  });
+  currentSlide = index;
+}
+
+function nextPSlide(){
+  let next = (currentSlide + 1) % slides.length;
+  showSlide(next);
+}
+
+function prevPSlide(){
+  let prev = (currentSlide - 1 + slides.length) % slides.length;
+  showSlide(prev);
+}
+
+function goToPSlide(index){
+  showSlide(index);
+}
+
+// Auto-slide toutes les 5 secondes
+setInterval(nextPSlide, 5000);
+
+// Initial
+showSlide(0);
+</script>
+
 
 </body>
 </html>

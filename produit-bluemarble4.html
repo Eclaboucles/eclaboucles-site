@@ -266,5 +266,41 @@ clearCartBtn.addEventListener("click", ()=>{
 renderCart();
 </script>
 
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll(".pslide");
+const dots = document.querySelectorAll(".pdot");
+
+function showSlide(index){
+  slides.forEach((s,i)=>{
+    s.classList.toggle("active", i===index);
+  });
+  dots.forEach((d,i)=>{
+    d.classList.toggle("active", i===index);
+  });
+  currentSlide = index;
+}
+
+function nextPSlide(){
+  let next = (currentSlide + 1) % slides.length;
+  showSlide(next);
+}
+
+function prevPSlide(){
+  let prev = (currentSlide - 1 + slides.length) % slides.length;
+  showSlide(prev);
+}
+
+function goToPSlide(index){
+  showSlide(index);
+}
+
+// Auto-slide toutes les 5 secondes
+setInterval(nextPSlide, 5000);
+
+// Initial
+showSlide(0);
+</script>
+
 </body>
 </html>
