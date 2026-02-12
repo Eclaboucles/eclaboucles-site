@@ -84,5 +84,121 @@
 
 <footer>© 2026 Eclaboucles</footer>
 
+
+<script>
+// --- Panier global avec LocalStorage ---
+const navCartCount = document.getElementById("nav-cart-count");
+const cartItemsDiv = document.getElementById("cart-items");
+const cartTotalEl = document.getElementById("cart-total");
+const openCartBtn = document.getElementById("open-cart");
+const closeCartBtn = document.getElementById("close-cart");
+const clearCartBtn = document.getElementById("clear-cart");
+const cartModal = document.getElementById("cart-modal");
+
+// Récupérer le panier depuis LocalStorage ou créer un tableau vide
+function getCart(){
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+// Sauvegarder le panier dans LocalStorage
+function saveCart(cart){
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Affichage du panier
+function renderCart(){
+  const cart = getCart();
+  cartItemsDiv.innerHTML = "";
+  if(cart.length === 0){
+    cartItemsDiv.innerHTML = "<p>Votre panier est vide.</p>";
+    cartTotalEl.textContent = "0";
+    navCartCount.textContent = "0";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${item.name}</strong><br>
+      ${item.description}<br>
+      Prix: ${item.price.toFixed(2)} €<br>
+      Quantité: <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="item-qty" style="width:50px;">
+      <button data-index="${index}" class="remove-item">Supprimer</button>
+    `;
+    ul.appendChild(li);
+    total += item.price * item.quantity;
+  });
+
+  cartItemsDiv.appendChild(ul);
+  cartTotalEl.textContent = total.toFixed(2);
+  navCartCount.textContent = cart.reduce((sum,i)=>sum+i.quantity,0);
+
+  // Changement quantité
+  document.querySelectorAll(".item-qty").forEach(input=>{
+    input.addEventListener("change", e=>{
+      const idx = e.target.dataset.index;
+      const val = parseInt(e.target.value);
+      const cart = getCart();
+      if(val < 1){ e.target.value = 1; return; }
+      cart[idx].quantity = val;
+      saveCart(cart);
+      renderCart();
+    });
+  });
+
+  // Supprimer un article
+  document.querySelectorAll(".remove-item").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      const idx = e.target.dataset.index;
+      const cart = getCart();
+      cart.splice(idx,1);
+      saveCart(cart);
+      renderCart();
+    });
+  });
+}
+
+// Ajouter au panier
+document.querySelectorAll(".add-to-cart").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const cart = getCart(); // toujours lire le panier à jour
+    const product = {
+      id: btn.dataset.id,
+      name: btn.dataset.name,
+      description: btn.dataset.description,
+      price: parseFloat(btn.dataset.price),
+      quantity:1
+    };
+
+    const existing = cart.find(p=>p.id === product.id);
+    if(existing){
+      existing.quantity += 1;
+    } else {
+      cart.push(product);
+    }
+
+    saveCart(cart);
+    renderCart();
+    alert(`${product.name} ajouté au panier !`);
+  });
+});
+
+// Ouvrir / fermer
+openCartBtn.addEventListener("click", ()=> cartModal.style.display="block");
+closeCartBtn.addEventListener("click", ()=> cartModal.style.display="none");
+
+// Vider panier
+clearCartBtn.addEventListener("click", ()=>{
+  saveCart([]);
+  renderCart();
+});
+
+// Afficher panier dès chargement
+renderCart();
+</script>
+
 </body>
 </html>
