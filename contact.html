@@ -30,6 +30,18 @@
   <div id="nav-cart" style="float:right; margin-left: auto;">
     <a href="#" id="open-cart">Panier (<span id="nav-cart-count">0</span>)</a>
   </div>
+
+  <!-- Fenêtre panier flottante -->
+<div id="cart-modal" style="display:none; position:fixed; top:60px; right:20px; width:350px; max-height:80vh; overflow-y:auto; background:#fff; border:1px solid #ccc; padding:15px; box-shadow:0 2px 10px rgba(0,0,0,0.3); z-index:1000;">
+  <h3>Mon Panier</h3>
+  <div id="cart-items">
+    <p>Votre panier est vide.</p>
+  </div>
+  <p><strong>Total : </strong><span id="cart-total">0</span> €</p>
+  <button id="clear-cart">Vider le panier</button>
+  <button id="close-cart">Fermer</button>
+</div>
+
 </nav>
 
 <section class="contact-section">
